@@ -4,6 +4,7 @@
 
 This repository contains official implementation of the paper
 [Shadow Cones: Unveiling Partial Orders in Hyperbolic Space](https://arxiv.org/abs/2305.15215).
+Some of our code in data loading part is adopted from [hyperbolic_cones](https://github.com/dalab/hyperbolic_cones).
 
 ### Dependencies
 Our implementation works with Python>=3.9 and PyTorch>=1.12.1. We use [HTorch](https://github.com/ydtydr/HTorch)
