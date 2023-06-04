@@ -13,7 +13,7 @@ To install other dependencies, use: `$ pip install -r requirement.txt`
 
 ### Data
 We provide the WordNet datasets (mammal and noun) under `data_utils/data/maxn/`, which
-corresponds to [entailment cone](https://github.com/dalab/hyperbolic_cones/tree/master/data/maxn).
+are the same as those used in [entailment cone](https://github.com/dalab/hyperbolic_cones/tree/master/data/maxn).
 Due to space limit, ConceptNet and hearst datasets are stored on Google Drive. Please download 
 with `gdown` and move them to `data_utils/data/MCG` and `data_utils/data/hearst`:
 ```python
