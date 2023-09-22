@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+import os
 import torch
 import numpy as np
 from HTorch.optimizers import RiemannianSGD, RiemannianAdam
@@ -132,7 +133,7 @@ def argument_parser():
     parser.add_argument('-curvature', default=-1.0, help="curvature of hyperbolic space, set to None for trainable curvature")
     parser.add_argument('-model', type=str, choices=['umbral', 'penumbral'], default='umbral',
                         help='cone model class to use: (umbral | penumbral)')
-    parser.add_argument('-source', type=str, default='infinity', help='source of light: (infinity | origin | float)')
+    parser.add_argument('-source', type=str, default='infinity', help='source of light: (infinity | origin | near-origin | float)')
     parser.add_argument('-radius', type=float, default=0.05, help="object / source radius")
     parser.add_argument('-margin', type=float, default=0.001, help="margin in energy function, measures how far to push negatives")
     parser.add_argument('-sub_apex_dist', type=float, default=0.0001, help="sub_apex_dist for training")
@@ -158,6 +159,7 @@ def argument_parser():
     parser.add_argument('-eval_method', type=str, choices=['partial', 'energy'], default='partial',
                         help='eval_method method: (partial | energy)')
     parser.add_argument('-eval_freq', type=int, default=20, help="eval_freq during training")
+    parser.add_argument('-save_model', type=bool, default=False, help="whether to save model")
     ############# debug configurations
     parser.add_argument('-seed', type=int, default=43, help="random seed for reproducing results")
     parser.add_argument('-debug', type=int, default=0, help="debug mode")
@@ -197,6 +199,12 @@ if __name__ == '__main__':
     args.curvature = torch.nn.Parameter(torch.tensor(-1.0)) if args.curvature==None else float(args.curvature)
     if args.debug:
         print("number of nodes", size)
+    print("model type", args.model)
+    print("Initial embeddings", args.source)
+    print("model dim", args.dim)
+    print("non basic percentage", args.train_non_basic_percent)
+    
+    
     if args.model == 'umbral':
         hyp_cone = UmbralCone(source = args.source, radius = args.radius, 
                               size = size, dim = args.dim, sparse=args.sparse, curvature = args.curvature, 
@@ -224,7 +232,7 @@ if __name__ == '__main__':
     ### Tuning radius
     ###########################
     time1 = time.time()
-    if args.model == 'penumbral' and not args.source=='origin':
+    if args.model == 'penumbral' and not (args.source=='origin' or args.source=='near-origin'):
         height_list = np.array([2.0, 5.0, 10.0, 20.0, 21.0, 25.0])
         val_precision, val_recall, val_f1 = tune(height_list, hyp_cone_eval, val_pos_loader, val_neg_loader,
                                                  method=args.eval_method, radius=False)
@@ -244,3 +252,8 @@ if __name__ == '__main__':
     time2 = time.time()
     if args.debug:
         print(f"tuning time, val: {'%.2f' % (time2 - time1)}")
+
+    if args.save_model:
+        if not os.path.exists("trained_models"):
+            os.makedirs("trained_models")
+        torch.save({"vocab": data_handler.kv.index2word, "model_weight": hyp_cone_eval.state_dict()}, f"trained_models/mammal_with_vocab_epoch_{args.epoch}_model_{args.model}.pth")
