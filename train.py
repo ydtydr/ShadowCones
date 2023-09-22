@@ -241,7 +241,12 @@ if __name__ == '__main__':
         hyp_cone_eval.level = height_list[val_pos]
         test_triplet = evaluate(hyp_cone_eval, test_pos_loader, test_neg_loader, method = args.eval_method)
     else:
-        radius_list = np.array([0.01, 0.05, 0.06, 0.1, 0.2, 0.3])
+        
+        if args.model == 'umbral':
+            radius_list = np.array([0.01, 0.05, 0.06, 0.1])
+        else:
+            radius_list = np.array([0.01, 0.05, 0.06, 0.1, 0.2, 0.3])
+            
         val_precision, val_recall, val_f1 = tune(radius_list, hyp_cone_eval, val_pos_loader, val_neg_loader,
                                                  method=args.eval_method, radius=True)
         val_pos = val_f1.index(max(val_f1))
