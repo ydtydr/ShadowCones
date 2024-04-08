@@ -40,9 +40,11 @@ bash run.sh
 
 If you find our works helpful in your research, please consider citing us:
 
-    @article{yu2023shadow,
-      title={Shadow Cones: Unveiling Partial Orders in Hyperbolic Space},
-      author={Yu, Tao and Liu, Toni JB and Tseng, Albert and De Sa, Christopher},
-      journal={arXiv preprint arXiv:2305.15215},
-      year={2023}
-    }
+    @inproceedings{
+      yu2024shadow,
+      title={Shadow Cones: A Generalized Framework for Partial Order Embeddings},
+      author={Tao Yu and Toni J.B. Liu and Albert Tseng and Christopher De Sa},
+      booktitle={The Twelfth International Conference on Learning Representations},
+      year={2024},
+      url={https://openreview.net/forum?id=zbKcFZ6Dbp}
+     }
